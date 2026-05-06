@@ -1,0 +1,552 @@
+{
+  "auto": {
+    "AL": {
+      "state_name": "Alabama",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/25. No mandatory PIP or UM/UIM, but UM/UIM must be offered."
+    },
+    "AK": {
+      "state_name": "Alaska",
+      "bodily_injury_per_person": 50000,
+      "bodily_injury_per_accident": 100000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Higher minimums than most states at 50/100/25."
+    },
+    "AZ": {
+      "state_name": "Arizona",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 15000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/15. UM/UIM must be offered and is strongly recommended."
+    },
+    "AR": {
+      "state_name": "Arkansas",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/25."
+    },
+    "CA": {
+      "state_name": "California",
+      "bodily_injury_per_person": 15000,
+      "bodily_injury_per_accident": 30000,
+      "property_damage": 5000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "California has very low minimums at 15/30/5. Minimums are increasing to 30/60/15 effective Jan 1, 2025. UM/UIM coverage is not required but strongly recommended. Medical payments coverage is also advisable."
+    },
+    "CO": {
+      "state_name": "Colorado",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 15000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/15. UM/UIM must be offered."
+    },
+    "CT": {
+      "state_name": "Connecticut",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Minimum 25/50/25. Uninsured/underinsured motorist coverage is required at the same limits."
+    },
+    "DC": {
+      "state_name": "District of Columbia",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 10000,
+      "pip_required": true,
+      "pip_min": 50000,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Requires PIP ($50,000 min) and UM/UIM coverage."
+    },
+    "DE": {
+      "state_name": "Delaware",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 10000,
+      "pip_required": true,
+      "pip_min": 15000,
+      "uninsured_motorist_required": false,
+      "notes": "Delaware is a modified no-fault state. PIP minimum is $15,000."
+    },
+    "FL": {
+      "state_name": "Florida",
+      "bodily_injury_per_person": 10000,
+      "bodily_injury_per_accident": 20000,
+      "property_damage": 10000,
+      "pip_required": true,
+      "pip_min": 10000,
+      "uninsured_motorist_required": false,
+      "notes": "Florida is a no-fault state. Requires $10,000 PIP and $10,000 PD. Bodily injury liability is NOT required (except for certain drivers). UM/UIM strongly recommended. Very low minimums — consider significantly higher limits."
+    },
+    "GA": {
+      "state_name": "Georgia",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/25. UM/UIM must be offered."
+    },
+    "HI": {
+      "state_name": "Hawaii",
+      "bodily_injury_per_person": 20000,
+      "bodily_injury_per_accident": 40000,
+      "property_damage": 10000,
+      "pip_required": true,
+      "pip_min": 10000,
+      "uninsured_motorist_required": false,
+      "notes": "Hawaii is a no-fault state. Requires PIP ($10,000 min). Minimum liability is 20/40/10."
+    },
+    "ID": {
+      "state_name": "Idaho",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 15000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/15."
+    },
+    "IL": {
+      "state_name": "Illinois",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 20000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Minimum 25/50/20. Uninsured motorist coverage required at same limits as liability."
+    },
+    "IN": {
+      "state_name": "Indiana",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/25."
+    },
+    "IA": {
+      "state_name": "Iowa",
+      "bodily_injury_per_person": 20000,
+      "bodily_injury_per_accident": 40000,
+      "property_damage": 15000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 20/40/15."
+    },
+    "KS": {
+      "state_name": "Kansas",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": true,
+      "pip_min": 4500,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Kansas is a no-fault state. Requires PIP ($4,500 for medical expenses) and UM/UIM at same limits as liability."
+    },
+    "KY": {
+      "state_name": "Kentucky",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": true,
+      "pip_min": 10000,
+      "uninsured_motorist_required": false,
+      "notes": "Kentucky is a choice no-fault state. Default is no-fault with $10,000 PIP required. Drivers can opt out of the no-fault system."
+    },
+    "LA": {
+      "state_name": "Louisiana",
+      "bodily_injury_per_person": 15000,
+      "bodily_injury_per_accident": 30000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 15/30/25. Low BI minimums — higher limits strongly recommended. Louisiana has high litigation rates."
+    },
+    "ME": {
+      "state_name": "Maine",
+      "bodily_injury_per_person": 50000,
+      "bodily_injury_per_accident": 100000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 50000,
+      "um_per_accident": 100000,
+      "notes": "Maine has high minimums at 50/100/25 with required UM/UIM at same limits. Also requires medical payments coverage ($2,000 min)."
+    },
+    "MD": {
+      "state_name": "Maryland",
+      "bodily_injury_per_person": 30000,
+      "bodily_injury_per_accident": 60000,
+      "property_damage": 15000,
+      "pip_required": true,
+      "pip_min": 2500,
+      "uninsured_motorist_required": true,
+      "um_per_person": 30000,
+      "um_per_accident": 60000,
+      "notes": "Maryland requires PIP ($2,500 min), UM/UIM at same liability limits, and has mandatory uninsured motorist property damage coverage."
+    },
+    "MA": {
+      "state_name": "Massachusetts",
+      "bodily_injury_per_person": 20000,
+      "bodily_injury_per_accident": 40000,
+      "property_damage": 5000,
+      "pip_required": true,
+      "pip_min": 8000,
+      "uninsured_motorist_required": true,
+      "um_per_person": 20000,
+      "um_per_accident": 40000,
+      "notes": "Massachusetts is a no-fault state. Requires PIP ($8,000), UM/UIM, and property damage. Very low PD minimum — higher limits recommended."
+    },
+    "MI": {
+      "state_name": "Michigan",
+      "bodily_injury_per_person": 50000,
+      "bodily_injury_per_accident": 100000,
+      "property_damage": 10000,
+      "pip_required": true,
+      "pip_min": 0,
+      "uninsured_motorist_required": false,
+      "notes": "Michigan has a tiered PIP system. Drivers can choose PIP limits from $50,000 to unlimited (unlimited recommended). Minimum BI is 50/100. Michigan has unique mini-tort for PD up to $3,000 against at-fault drivers. Full PIP with unlimited medical is highly recommended."
+    },
+    "MN": {
+      "state_name": "Minnesota",
+      "bodily_injury_per_person": 30000,
+      "bodily_injury_per_accident": 60000,
+      "property_damage": 10000,
+      "pip_required": true,
+      "pip_min": 40000,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Minnesota is a no-fault state. Requires $40,000 PIP and UM/UIM. Minimum 30/60/10."
+    },
+    "MS": {
+      "state_name": "Mississippi",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/25."
+    },
+    "MO": {
+      "state_name": "Missouri",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Minimum 25/50/25 with required UM/UIM at same limits."
+    },
+    "MT": {
+      "state_name": "Montana",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 20000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/20."
+    },
+    "NE": {
+      "state_name": "Nebraska",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Minimum 25/50/25 with required UM/UIM."
+    },
+    "NV": {
+      "state_name": "Nevada",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 20000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/20."
+    },
+    "NH": {
+      "state_name": "New Hampshire",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "New Hampshire is the only state with no mandatory insurance law, but drivers must demonstrate financial responsibility (25/50/25 is the standard). Most lenders and landlords require coverage. Strongly recommended."
+    },
+    "NJ": {
+      "state_name": "New Jersey",
+      "bodily_injury_per_person": 15000,
+      "bodily_injury_per_accident": 30000,
+      "property_damage": 5000,
+      "pip_required": true,
+      "pip_min": 15000,
+      "uninsured_motorist_required": true,
+      "um_per_person": 15000,
+      "um_per_accident": 30000,
+      "notes": "New Jersey is a no-fault state with two options: Basic (very limited) and Standard. Basic policy has very low limits; Standard is recommended. Requires PIP ($15,000 min), UM/UIM. Low minimums — significantly higher limits recommended."
+    },
+    "NM": {
+      "state_name": "New Mexico",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 10000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/10. UM/UIM must be offered."
+    },
+    "NY": {
+      "state_name": "New York",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 10000,
+      "pip_required": true,
+      "pip_min": 50000,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "New York is a no-fault state. Requires $50,000 PIP (Basic Economic Loss), UM/UIM, and has a death benefit requirement. Also requires Supplemental Spousal Liability. BI minimums include a death benefit: $50,000/$100,000."
+    },
+    "NC": {
+      "state_name": "North Carolina",
+      "bodily_injury_per_person": 30000,
+      "bodily_injury_per_accident": 60000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 30000,
+      "um_per_accident": 60000,
+      "notes": "Minimum 30/60/25. Uninsured and underinsured motorist coverage required at liability limits."
+    },
+    "ND": {
+      "state_name": "North Dakota",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": true,
+      "pip_min": 30000,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "North Dakota is a no-fault state. Requires $30,000 PIP and UM/UIM."
+    },
+    "OH": {
+      "state_name": "Ohio",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/25."
+    },
+    "OK": {
+      "state_name": "Oklahoma",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/25."
+    },
+    "OR": {
+      "state_name": "Oregon",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 20000,
+      "pip_required": true,
+      "pip_min": 15000,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Oregon requires PIP ($15,000 min), UM/UIM at liability limits."
+    },
+    "PA": {
+      "state_name": "Pennsylvania",
+      "bodily_injury_per_person": 15000,
+      "bodily_injury_per_accident": 30000,
+      "property_damage": 5000,
+      "pip_required": true,
+      "pip_min": 5000,
+      "uninsured_motorist_required": false,
+      "notes": "Pennsylvania is a choice no-fault state. Requires $5,000 first-party medical benefits (PIP). Very low minimums at 15/30/5 — higher limits strongly recommended. Drivers can choose limited or full tort."
+    },
+    "RI": {
+      "state_name": "Rhode Island",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/25."
+    },
+    "SC": {
+      "state_name": "South Carolina",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Minimum 25/50/25. Uninsured motorist coverage required."
+    },
+    "SD": {
+      "state_name": "South Dakota",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Minimum 25/50/25. UM/UIM required."
+    },
+    "TN": {
+      "state_name": "Tennessee",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 15000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/15."
+    },
+    "TX": {
+      "state_name": "Texas",
+      "bodily_injury_per_person": 30000,
+      "bodily_injury_per_accident": 60000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Texas requires 30/60/25. PIP must be offered ($2,500 min) but can be waived in writing. UM/UIM must be offered. Medical payments coverage also available."
+    },
+    "UT": {
+      "state_name": "Utah",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 65000,
+      "property_damage": 15000,
+      "pip_required": true,
+      "pip_min": 3000,
+      "uninsured_motorist_required": false,
+      "notes": "Utah is a no-fault state. Requires $3,000 PIP. Unusual 25/65/15 structure for BI limits."
+    },
+    "VT": {
+      "state_name": "Vermont",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 10000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 50000,
+      "um_per_accident": 100000,
+      "notes": "Minimum 25/50/10. UM/UIM required at higher limits (50/100)."
+    },
+    "VA": {
+      "state_name": "Virginia",
+      "bodily_injury_per_person": 30000,
+      "bodily_injury_per_accident": 60000,
+      "property_damage": 20000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 30000,
+      "um_per_accident": 60000,
+      "notes": "Minimum 30/60/20. UM/UIM required at same limits. Virginia allows uninsured drivers to pay an annual $500 fee instead of insurance — UM/UIM is essential."
+    },
+    "WA": {
+      "state_name": "Washington",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 10000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/10. UM/UIM must be offered."
+    },
+    "WV": {
+      "state_name": "West Virginia",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 25000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Minimum 25/50/25. UM/UIM required."
+    },
+    "WI": {
+      "state_name": "Wisconsin",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 10000,
+      "pip_required": false,
+      "uninsured_motorist_required": true,
+      "um_per_person": 25000,
+      "um_per_accident": 50000,
+      "notes": "Minimum 25/50/10. UM/UIM required."
+    },
+    "WY": {
+      "state_name": "Wyoming",
+      "bodily_injury_per_person": 25000,
+      "bodily_injury_per_accident": 50000,
+      "property_damage": 20000,
+      "pip_required": false,
+      "uninsured_motorist_required": false,
+      "notes": "Minimum 25/50/20."
+    }
+  },
+  "home": {
+    "state_mandated": false,
+    "notes": "Homeowners insurance is NOT required by state law in any US state. However, mortgage lenders universally require it. Coverage should be based on the home's replacement cost (not market value). Flood and earthquake damage are NOT covered by standard HO policies and require separate coverage.",
+    "recommended_minimums": {
+      "dwelling_coverage": "100% of home replacement cost (not market value)",
+      "other_structures": "10% of dwelling coverage",
+      "personal_property": "50-70% of dwelling coverage",
+      "loss_of_use": "20-30% of dwelling coverage",
+      "personal_liability": 300000,
+      "medical_payments": 5000
+    },
+    "critical_gaps_to_check": [
+      "Flood insurance (separate NFIP or private policy required — never included in HO)",
+      "Earthquake insurance (required in CA, WA, OR, AK, NV seismic zones)",
+      "Replacement cost vs Actual Cash Value (ACV pays depreciated value — get RCV)",
+      "Sewer/water backup rider (typically excluded from standard HO)",
+      "Scheduled personal property for valuables over $2,500",
+      "Home business coverage if operating any business from home",
+      "Umbrella policy for liability over $300,000"
+    ],
+    "high_risk_states": {
+      "FL": "Hurricane, flood, sinkholes — extra windstorm coverage often required",
+      "LA": "Hurricane and flood — NFIP or private flood essential",
+      "TX": "Hail, wind, hurricane on coast — check windstorm exclusions",
+      "CA": "Wildfire and earthquake — many insurers restricting coverage",
+      "OK": "Tornado and hail — check wind/hail deductibles",
+      "CO": "Hail damage is the #1 claim — check hail deductibles",
+      "NC": "Hurricane on coast — check windstorm/flood riders",
+      "SC": "Hurricane and flood — NFIP coverage important"
+    }
+  }
+}
