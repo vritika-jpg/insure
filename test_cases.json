@@ -1,0 +1,76 @@
+[
+  {
+    "id": "TC01",
+    "label": "Financed auto, teen driver",
+    "state": "TX",
+    "insurance_type": "auto",
+    "situation": "I just bought a used 2020 Honda Civic in Texas. I only carry state minimum liability. The car is financed through the dealership, I drive about 14,000 miles a year, and my 17-year-old is on the policy.",
+    "expected_gaps": ["comprehensive and collision required by lienholder", "teen driver increases liability exposure", "underinsured motorist coverage missing"],
+    "expected_recommendations": ["add comprehensive and collision", "increase liability limits above state minimum", "add uninsured/underinsured motorist coverage"]
+  },
+  {
+    "id": "TC02",
+    "label": "First apartment renter, Maryland",
+    "state": "MD",
+    "insurance_type": "home",
+    "situation": "I just moved into my first apartment in Baltimore. I have a dog, work from home, and have about $15,000 worth of electronics and furniture. My landlord never mentioned insurance.",
+    "expected_gaps": ["no renters insurance", "personal property unprotected", "liability gap if dog bites someone", "home-based business equipment may not be covered"],
+    "expected_recommendations": ["purchase renters insurance", "add pet liability rider", "check business equipment coverage limit"]
+  },
+  {
+    "id": "TC03",
+    "label": "Home-based photography business",
+    "state": "CA",
+    "insurance_type": "home",
+    "situation": "I run a small photography business out of my house in California and sometimes shoot at client locations. I have about $20,000 in camera gear. My homeowner's policy is through State Farm.",
+    "expected_gaps": ["business equipment likely excluded from homeowners policy", "no general liability for client injuries on location", "professional liability not covered"],
+    "expected_recommendations": ["add business property endorsement or inland marine policy", "purchase general liability for business", "consider professional liability (E&O)"]
+  },
+  {
+    "id": "TC04",
+    "label": "New homeowner, Virginia, young family",
+    "state": "VA",
+    "insurance_type": "home",
+    "situation": "We just bought a house in northern Virginia. We have two kids under 10, my spouse works part time, and we have a mortgage. We got a basic homeowners policy at closing but haven't reviewed it.",
+    "expected_gaps": ["dwelling coverage may not reflect rebuild cost", "no umbrella policy with young children", "life insurance gap not addressed", "flood not included in standard policy"],
+    "expected_recommendations": ["verify dwelling coverage equals replacement cost", "consider umbrella liability policy", "review flood risk for the area"]
+  },
+  {
+    "id": "TC05",
+    "label": "Old paid-off car, liability only",
+    "state": "OH",
+    "insurance_type": "auto",
+    "situation": "I have a 2013 Nissan Sentra worth about $4,000. I currently only carry liability in Ohio. The car is paid off. I commute 25 miles each way to work every day.",
+    "expected_gaps": ["no collision coverage if at-fault accident", "high mileage increases risk", "medical payments or PIP may be missing"],
+    "expected_recommendations": ["liability-only may be appropriate given low car value", "consider adding medical payments coverage", "evaluate uninsured motorist given daily commute exposure"]
+  },
+  {
+    "id": "TC06",
+    "label": "New driver, no prior coverage",
+    "state": "FL",
+    "insurance_type": "auto",
+    "situation": "I'm 22 years old with a clean driving record in Florida. I just got my own car for the first time — a 2019 Toyota Corolla I'm financing. My parents used to cover me on their policy.",
+    "expected_gaps": ["need own policy as primary insured", "lienholder requires comp and collision", "Florida requires PIP", "young driver premium risk"],
+    "expected_recommendations": ["purchase full coverage policy", "meet Florida PIP requirement", "add comprehensive and collision for financed vehicle"]
+  },
+  {
+    "id": "TC07",
+    "label": "Edge case: minimal input",
+    "state": "NY",
+    "insurance_type": "auto",
+    "situation": "I need insurance.",
+    "expected_gaps": [],
+    "expected_recommendations": [],
+    "expected_behavior": "low confidence, requests more information, does not hallucinate specific gaps"
+  },
+  {
+    "id": "TC08",
+    "label": "Edge case: out of scope commercial",
+    "state": "IL",
+    "insurance_type": "home",
+    "situation": "I own a restaurant in Chicago with 12 employees. I need workers comp and general liability. What should I get?",
+    "expected_gaps": [],
+    "expected_recommendations": [],
+    "expected_behavior": "flags as commercial/out-of-scope, recommends speaking with a commercial lines agent, does not fabricate home coverage advice"
+  }
+]
