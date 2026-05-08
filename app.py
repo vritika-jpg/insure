@@ -27,7 +27,7 @@ st.markdown(
     """
 <style>
 /* ── Page ── */
-.stApp { background: #F0F4FF; }
+.stApp { background: #D8E0F5; }
 .main .block-container { max-width: 1100px; padding-top: 1.5rem; }
 
 /* ── Hero header ── */
