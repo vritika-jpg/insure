@@ -27,7 +27,7 @@ st.markdown(
     """
 <style>
 /* ── Page ── */
-.stApp { background: #D8E0F5; }
+.stApp { background: #F59E0B; }
 .main .block-container { max-width: 1100px; padding-top: 1.5rem; }
 
 /* ── Hero header ── */
@@ -88,8 +88,7 @@ st.markdown(
 /* ── Generic card ── */
 .card {
     background: white; border-radius: 16px; padding: 18px 22px;
-    margin: 10px 0; box-shadow: 0 3px 16px rgba(79,70,229,0.08);
-    border: 1px solid rgba(79,70,229,0.1);
+    margin: 10px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
 
 /* ── Coverage gaps ── */
@@ -101,10 +100,10 @@ st.markdown(
 
 /* ── Recommendations ── */
 .rec-card {
-    background: white; border: 1.5px solid #EDE9FE; border-radius: 16px;
+    background: white; border-radius: 16px;
     padding: 14px 18px; margin: 8px 0;
     display: flex; gap: 14px; align-items: flex-start;
-    box-shadow: 0 2px 12px rgba(79,70,229,0.07);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
     transition: box-shadow 0.2s ease;
 }
 .rec-rank {
@@ -158,7 +157,7 @@ st.markdown(
 }
 .stTextArea textarea {
     border-radius: 14px !important;
-    border: 1.5px solid #E5E7EB !important;
+    border: 1px solid #E5E7EB !important;
     font-size: .94rem !important;
     transition: border-color 0.2s ease !important;
 }
@@ -168,11 +167,11 @@ st.markdown(
 }
 [data-baseweb="select"] > div {
     border-radius: 14px !important;
-    border: 1.5px solid #E5E7EB !important;
+    border: 1px solid #E5E7EB !important;
 }
 [data-testid="stFileUploader"] section {
     border-radius: 18px !important;
-    border: 2px dashed #C4B5FD !important;
+    border: 1px dashed #C4B5FD !important;
     background: #FAFAFE !important;
     transition: border-color 0.2s ease !important;
 }
@@ -182,6 +181,19 @@ st.markdown(
 }
 div[data-testid="stDownloadButton"] > button {
     border-radius: 14px !important;
+}
+[data-testid="stFileUploader"] * {
+    color: #1A202C !important;
+}
+[data-testid="stFileUploader"] button {
+    background: #EEF2FF !important;
+    color: #4F46E5 !important;
+    border: 1px solid #C7D2FE !important;
+    border-radius: 10px !important;
+}
+[data-testid="stVerticalBlockBorderWrapper"] {
+    border: 1px solid #D1D5DB !important;
+    border-radius: 16px !important;
 }
 </style>
 """,
@@ -565,8 +577,6 @@ tab1, tab2 = st.tabs(["🔍 Coverage Explainer", "📄 COI Generator"])
 
 # ── Tab 1: Coverage Explainer ─────────────────────────────────────────────────
 with tab1:
-    st.markdown("#### Describe your insurance situation")
-
     STATE_CODES = [
         "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL",
         "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME",
@@ -578,19 +588,21 @@ with tab1:
     col_form, col_results = st.columns([1, 1.7], gap="large")
 
     with col_form:
-        state = st.selectbox("State", options=STATE_CODES, index=STATE_CODES.index("CA"))
-        ins_type = st.radio("Insurance Type", ["auto", "home"], horizontal=True)
-        situation = st.text_area(
-            "Situation",
-            placeholder=(
-                "e.g. I just bought a used 2020 Honda Civic in Texas. "
-                "I carry state minimum liability only. The car is financed, "
-                "I drive ~14,000 miles/year, and I have a teenage driver on the policy."
-            ),
-            height=185,
-            label_visibility="collapsed",
-        )
-        submitted = st.button("Analyze Coverage →", type="primary", use_container_width=True)
+        with st.container(border=True):
+            st.markdown("#### Describe your insurance situation")
+            state = st.selectbox("State", options=STATE_CODES, index=STATE_CODES.index("CA"))
+            ins_type = st.radio("Insurance Type", ["auto", "home"], horizontal=True)
+            situation = st.text_area(
+                "Situation",
+                placeholder=(
+                    "e.g. I just bought a used 2020 Honda Civic in Texas. "
+                    "I carry state minimum liability only. The car is financed, "
+                    "I drive ~14,000 miles/year, and I have a teenage driver on the policy."
+                ),
+                height=185,
+                label_visibility="collapsed",
+            )
+            submitted = st.button("Analyze Coverage →", type="primary", use_container_width=True)
 
     with col_results:
         if submitted:
