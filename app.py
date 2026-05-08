@@ -4,15 +4,10 @@ import json
 import os
 from datetime import datetime
 
-import PyPDF2
+import pypdf
 import streamlit as st
 from dotenv import load_dotenv
 from openai import OpenAI
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.units import inch
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from prompts import COVERAGE_EXPLAINER_SYSTEM, COI_EXTRACTOR_SYSTEM
 
@@ -307,8 +302,12 @@ def render_coverage_result(result: dict) -> None:
 
 
 # ── Tab 2 helpers ─────────────────────────────────────────────────────────────
+_ACORD25_TEMPLATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "acord25_template.pdf.pdf")
+_CB_ON = "/1"
+
+
 def extract_pdf_text(uploaded_file) -> str:
-    reader = PyPDF2.PdfReader(io.BytesIO(uploaded_file.read()))
+    reader = pypdf.PdfReader(io.BytesIO(uploaded_file.read()))
     return "\n".join(page.extract_text() or "" for page in reader.pages).strip()
 
 
@@ -480,195 +479,103 @@ def render_acord25_html(d: dict) -> str:
 """
 
 
-def generate_coi_pdf(d: dict) -> bytes:
-    buffer = io.BytesIO()
-    doc = SimpleDocTemplate(
-        buffer,
-        pagesize=letter,
-        topMargin=0.4 * inch,
-        bottomMargin=0.4 * inch,
-        leftMargin=0.4 * inch,
-        rightMargin=0.4 * inch,
-    )
+def fill_acord25_pdf(d: dict) -> bytes:
+    reader = pypdf.PdfReader(_ACORD25_TEMPLATE)
+    writer = pypdf.PdfWriter()
+    writer.append(reader)
 
-    BLUE = colors.HexColor("#1a3668")
-    LBLUE = colors.HexColor("#d0dcec")
-    LGRAY = colors.HexColor("#efefef")
-    BLACK = colors.black
-    W = 7.2 * inch
+    fields: dict = {}
 
-    def ps(name, **kw):
-        defaults = dict(fontName="Helvetica", leading=11, fontSize=9)
-        defaults.update(kw)
-        return ParagraphStyle(name, **defaults)
+    def s(key: str, val) -> None:
+        v = str(val).strip() if val and str(val).strip() not in ("", "null", "None") else ""
+        if v:
+            fields[key] = v
 
-    def cell_p(label: str, value: str) -> Paragraph:
-        esc_val = _f(value)
-        return Paragraph(
-            f'<font size="6" color="grey"><b>{html.escape(label.upper())}</b></font><br/>'
-            f'<font size="9"><b>{esc_val}</b></font>',
-            ps("cell"),
-        )
+    def cb(key: str) -> None:
+        fields[key] = _CB_ON
 
-    def sh(text: str) -> Table:
-        t = Table(
-            [[Paragraph(f'<font size="7" color="white"><b>{html.escape(text.upper())}</b></font>', ps("sh"))]],
-            colWidths=[W],
-        )
-        t.setStyle(TableStyle([
-            ("BACKGROUND", (0, 0), (-1, -1), BLUE),
-            ("TOPPADDING", (0, 0), (-1, -1), 3),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
-            ("LEFTPADDING", (0, 0), (-1, -1), 6),
-        ]))
-        return t
+    s("F[0].P1[0].Form_CompletionDate_A[0]", datetime.now().strftime("%m/%d/%Y"))
 
-    base_style = [
-        ("BOX", (0, 0), (-1, -1), 0.5, BLACK),
-        ("INNERGRID", (0, 0), (-1, -1), 0.5, BLACK),
-        ("VALIGN", (0, 0), (-1, -1), "TOP"),
-        ("TOPPADDING", (0, 0), (-1, -1), 4),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
-        ("LEFTPADDING", (0, 0), (-1, -1), 5),
-    ]
+    s("F[0].P1[0].Producer_FullName_A[0]", d.get("producer_name"))
+    s("F[0].P1[0].Producer_MailingAddress_LineOne_A[0]", d.get("producer_address"))
 
-    story = []
+    s("F[0].P1[0].NamedInsured_FullName_A[0]", d.get("insured_name"))
+    s("F[0].P1[0].NamedInsured_MailingAddress_LineOne_A[0]", d.get("insured_address"))
 
-    # Title
-    title_t = Table(
-        [[Paragraph('<font size="12" color="white"><b>CERTIFICATE OF LIABILITY INSURANCE</b></font>',
-                    ps("title", alignment=1))]],
-        colWidths=[W],
-    )
-    title_t.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, -1), BLUE),
-        ("TOPPADDING", (0, 0), (-1, -1), 9),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 9),
-    ]))
-    story.append(title_t)
+    s("F[0].P1[0].Insurer_FullName_A[0]", d.get("insurer_name"))
 
-    # Date / boilerplate
-    bp = (
-        "THIS CERTIFICATE IS ISSUED AS A MATTER OF INFORMATION ONLY AND CONFERS NO RIGHTS UPON THE "
-        "CERTIFICATE HOLDER. THIS CERTIFICATE DOES NOT AFFIRMATIVELY OR NEGATIVELY AMEND, EXTEND OR "
-        "ALTER THE COVERAGE AFFORDED BY THE POLICIES BELOW."
-    )
-    date_val = _f(d.get("policy_period_start"), datetime.now().strftime("%m/%d/%Y"))
-    dt = Table(
-        [[cell_p("Date (MM/DD/YYYY)", date_val),
-          Paragraph(f'<font size="7">{bp}</font>', ps("bp", leading=9))]],
-        colWidths=[1.6 * inch, 5.6 * inch],
-    )
-    dt.setStyle(TableStyle(base_style))
-    story.append(dt)
+    s("F[0].P1[0].CertificateHolder_FullName_A[0]", d.get("certificate_holder_name"))
+    s("F[0].P1[0].CertificateHolder_MailingAddress_LineOne_A[0]", d.get("certificate_holder_address"))
 
-    # Producer / Insured
-    pi = Table(
-        [[cell_p("Producer", d.get("producer_name", "")),
-          cell_p("Insured", d.get("insured_name", ""))]],
-        colWidths=[3.6 * inch, 3.6 * inch],
-    )
-    pi.setStyle(TableStyle(base_style))
-    story.append(pi)
+    s("F[0].P1[0].CertificateOfLiabilityInsurance_ACORDForm_RemarkText_A[0]", d.get("description_of_operations"))
 
-    # Insurer
-    story.append(sh("Insurer(s) Affording Coverage"))
-    period = f'{_f(d.get("policy_period_start"))} – {_f(d.get("policy_period_end"))}'
-    ins_t = Table(
-        [[cell_p("Insurer A", d.get("insurer_name")),
-          cell_p("Policy Number", d.get("policy_number")),
-          cell_p("Policy Period", period)]],
-        colWidths=[3.2 * inch, 2.0 * inch, 2.0 * inch],
-    )
-    ins_t.setStyle(TableStyle(base_style + [("BACKGROUND", (0, 0), (0, 0), LBLUE)]))
-    story.append(ins_t)
+    policy_num = d.get("policy_number") or ""
+    eff = d.get("policy_period_start") or ""
+    exp = d.get("policy_period_end") or ""
+    add_ins = "Y" if d.get("additional_insured") else ""
 
-    # Coverages
-    story.append(sh("Coverages"))
-    cov_rows = [
-        [Paragraph('<font size="7"><b>Type of Insurance</b></font>', ps("ch")),
-         Paragraph('<font size="7"><b>Limits</b></font>', ps("cl"))],
-    ]
-    for cov in d.get("coverages") or []:
-        parts = []
-        for key, label in [
-            ("combined_single_limit", "Combined Single Limit"),
-            ("each_occurrence", "Each Occurrence"),
-            ("aggregate", "Aggregate"),
-            ("bodily_injury_per_person", "BI / Person"),
-            ("bodily_injury_per_accident", "BI / Accident"),
-            ("property_damage", "Property Damage"),
-            ("deductible", "Deductible"),
-        ]:
-            v = cov.get(key)
-            if v and str(v).strip() not in ("", "null", "None"):
-                parts.append(
-                    f'<font size="6.5" color="grey">{html.escape(label)}: </font>'
-                    f'<font size="8.5"><b>{html.escape(str(v))}</b></font>'
-                )
-        limits_str = "  ".join(parts) if parts else "—"
-        cov_rows.append([
-            Paragraph(f'<font size="9"><b>{_f(cov.get("type"), "Other")}</b></font>', ps("ct")),
-            Paragraph(limits_str, ps("lm", leading=11)),
-        ])
+    for cov in (d.get("coverages") or []):
+        ctype = (cov.get("type") or "").lower()
 
-    if len(cov_rows) == 1:
-        cov_rows.append([Paragraph('<font size="8" color="grey">No coverages extracted</font>', ps("nc")), ""])
+        if any(k in ctype for k in ["general liability", "cgl", "commercial general"]):
+            cb("F[0].P1[0].GeneralLiability_CoverageIndicator_A[0]")
+            cb("F[0].P1[0].GeneralLiability_OccurrenceIndicator_A[0]")
+            cb("F[0].P1[0].GeneralLiability_GeneralAggregate_LimitAppliesPerPolicyIndicator_A[0]")
+            s("F[0].P1[0].Policy_GeneralLiability_PolicyNumberIdentifier_A[0]", policy_num)
+            s("F[0].P1[0].Policy_GeneralLiability_EffectiveDate_A[0]", eff)
+            s("F[0].P1[0].Policy_GeneralLiability_ExpirationDate_A[0]", exp)
+            s("F[0].P1[0].GeneralLiability_EachOccurrence_LimitAmount_A[0]", cov.get("each_occurrence"))
+            s("F[0].P1[0].GeneralLiability_GeneralAggregate_LimitAmount_A[0]", cov.get("aggregate"))
+            s("F[0].P1[0].GeneralLiability_ProductsAndCompletedOperations_AggregateLimitAmount_A[0]", cov.get("aggregate"))
+            if add_ins:
+                s("F[0].P1[0].CertificateOfInsurance_GeneralLiability_AdditionalInsuredCode_A[0]", add_ins)
 
-    cov_style = list(base_style) + [("BACKGROUND", (0, 0), (-1, 0), LBLUE)]
-    for i in range(2, len(cov_rows), 2):
-        cov_style.append(("BACKGROUND", (0, i), (-1, i), LGRAY))
-    cov_t = Table(cov_rows, colWidths=[3.0 * inch, 4.2 * inch])
-    cov_t.setStyle(TableStyle(cov_style))
-    story.append(cov_t)
+        elif any(k in ctype for k in ["auto", "automobile", "vehicle"]):
+            cb("F[0].P1[0].Vehicle_AnyAutoIndicator_A[0]")
+            s("F[0].P1[0].Policy_AutomobileLiability_PolicyNumberIdentifier_A[0]", policy_num)
+            s("F[0].P1[0].Policy_AutomobileLiability_EffectiveDate_A[0]", eff)
+            s("F[0].P1[0].Policy_AutomobileLiability_ExpirationDate_A[0]", exp)
+            s("F[0].P1[0].Vehicle_CombinedSingleLimit_EachAccidentAmount_A[0]", cov.get("combined_single_limit"))
+            s("F[0].P1[0].Vehicle_BodilyInjury_PerPersonLimitAmount_A[0]", cov.get("bodily_injury_per_person"))
+            s("F[0].P1[0].Vehicle_BodilyInjury_PerAccidentLimitAmount_A[0]", cov.get("bodily_injury_per_accident"))
+            s("F[0].P1[0].Vehicle_PropertyDamage_PerAccidentLimitAmount_A[0]", cov.get("property_damage"))
+            if add_ins:
+                s("F[0].P1[0].CertificateOfInsurance_AutomobileLiability_AdditionalInsuredCode_A[0]", add_ins)
 
-    # Description of Operations
-    story.append(sh("Description of Operations / Locations / Vehicles"))
-    desc_t = Table(
-        [[Paragraph(f'<font size="8">{_f(d.get("description_of_operations"), "N/A")}</font>', ps("desc"))]],
-        colWidths=[W],
-    )
-    desc_t.setStyle(TableStyle(base_style + [("MINROWHEIGHT", (0, 0), (-1, -1), 44)]))
-    story.append(desc_t)
+        elif any(k in ctype for k in ["umbrella", "excess"]):
+            cb("F[0].P1[0].Policy_PolicyType_UmbrellaIndicator_A[0]" if "umbrella" in ctype
+               else "F[0].P1[0].Policy_PolicyType_ExcessIndicator_A[0]")
+            cb("F[0].P1[0].ExcessUmbrella_OccurrenceIndicator_A[0]")
+            s("F[0].P1[0].Policy_ExcessLiability_PolicyNumberIdentifier_A[0]", policy_num)
+            s("F[0].P1[0].Policy_ExcessLiability_EffectiveDate_A[0]", eff)
+            s("F[0].P1[0].Policy_ExcessLiability_ExpirationDate_A[0]", exp)
+            s("F[0].P1[0].ExcessUmbrella_Umbrella_EachOccurrenceAmount_A[0]", cov.get("each_occurrence"))
+            s("F[0].P1[0].ExcessUmbrella_Umbrella_AggregateAmount_A[0]", cov.get("aggregate"))
+            s("F[0].P1[0].ExcessUmbrella_Umbrella_DeductibleOrRetentionAmount_A[0]", cov.get("deductible"))
+            if add_ins:
+                s("F[0].P1[0].CertificateOfInsurance_ExcessLiability_AdditionalInsuredCode_A[0]", add_ins)
 
-    # Certificate holder / Cancellation
-    story.append(sh("Certificate Holder"))
-    cancel = Paragraph(
-        '<font size="7">SHOULD ANY OF THE ABOVE DESCRIBED POLICIES BE CANCELLED BEFORE THE EXPIRATION '
-        'DATE THEREOF, NOTICE WILL BE DELIVERED IN ACCORDANCE WITH THE POLICY PROVISIONS.<br/><br/>'
-        'AUTHORIZED REPRESENTATIVE: ______________________________</font>',
-        ps("ct2", leading=10),
-    )
-    ch_t = Table(
-        [[Paragraph(
-            f'<font size="10"><b>{_f(d.get("certificate_holder_name"))}</b></font><br/>'
-            f'<font size="8">{_f(d.get("certificate_holder_address"), "")}</font>',
-            ps("chd"),
-        ), cancel]],
-        colWidths=[3.6 * inch, 3.6 * inch],
-    )
-    ch_t.setStyle(TableStyle(base_style + [("MINROWHEIGHT", (0, 0), (-1, -1), 60)]))
-    story.append(ch_t)
+        elif any(k in ctype for k in ["workers comp", "workers' comp", "workers compensation", " wc "]):
+            cb("F[0].P1[0].WorkersCompensationEmployersLiability_WorkersCompensationStatutoryLimitIndicator_A[0]")
+            s("F[0].P1[0].Policy_WorkersCompensationAndEmployersLiability_PolicyNumberIdentifier_A[0]", policy_num)
+            s("F[0].P1[0].Policy_WorkersCompensationAndEmployersLiability_EffectiveDate_A[0]", eff)
+            s("F[0].P1[0].Policy_WorkersCompensationAndEmployersLiability_ExpirationDate_A[0]", exp)
+            s("F[0].P1[0].WorkersCompensationEmployersLiability_EmployersLiability_EachAccidentLimitAmount_A[0]", cov.get("each_occurrence"))
+            s("F[0].P1[0].WorkersCompensationEmployersLiability_EmployersLiability_DiseaseEachEmployeeLimitAmount_A[0]", cov.get("each_occurrence"))
+            s("F[0].P1[0].WorkersCompensationEmployersLiability_EmployersLiability_DiseasePolicyLimitAmount_A[0]", cov.get("aggregate"))
 
-    # Footer
-    foot_t = Table(
-        [[Paragraph(
-            '<font size="6" color="grey">ACORD 25 (2016/03) | © 1988-2016 ACORD CORPORATION. '
-            'All rights reserved. | Generated by inSURE — for informational purposes only.</font>',
-            ps("ft", alignment=1),
-        )]],
-        colWidths=[W],
-    )
-    foot_t.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, -1), LGRAY),
-        ("BOX", (0, 0), (-1, -1), 0.5, BLACK),
-        ("TOPPADDING", (0, 0), (-1, -1), 4),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
-    ]))
-    story.append(foot_t)
+        else:
+            s("F[0].P1[0].OtherPolicy_OtherPolicyDescription_A[0]", cov.get("type"))
+            s("F[0].P1[0].OtherPolicy_PolicyNumberIdentifier_A[0]", policy_num)
+            s("F[0].P1[0].OtherPolicy_PolicyEffectiveDate_A[0]", eff)
+            s("F[0].P1[0].OtherPolicy_PolicyExpirationDate_A[0]", exp)
+            limit = cov.get("each_occurrence") or cov.get("combined_single_limit") or cov.get("aggregate")
+            s("F[0].P1[0].OtherPolicy_CoverageCode_A[0]", limit)
 
-    doc.build(story)
-    return buffer.getvalue()
+    writer.update_page_form_field_values(writer.pages[0], fields)
+    buf = io.BytesIO()
+    writer.write(buf)
+    return buf.getvalue()
 
 
 # ── Layout ───────────────────────────────────────────────────────────────────
@@ -745,7 +652,7 @@ with tab2:
                     st.stop()
                 coi_data = extract_coi_data(pdf_text)
                 st.session_state["coi_data"] = coi_data
-                st.session_state["coi_pdf"] = generate_coi_pdf(coi_data)
+                st.session_state["coi_pdf"] = fill_acord25_pdf(coi_data)
             except Exception as exc:
                 st.error(f"Extraction failed: {exc}")
 

@@ -28,7 +28,7 @@ Describe your home or auto insurance situation in plain English. InSure checks y
 
 ### Tab 2 — COI Generator
 
-Upload a PDF declaration page. InSure extracts the key fields and renders a filled ACORD 25-style Certificate of Liability Insurance, downloadable as a PDF.
+Upload a PDF declaration page. InSure extracts the key fields and fills the official **ACORD 25 (2016/03) Certificate of Liability Insurance** form, downloadable as a PDF.
 
 Extracted fields: insured name & address, producer, insurer, policy number, policy period, all coverage types and limits, description of operations, certificate holder.
 
@@ -114,20 +114,22 @@ Results saved to `eval_results.json`.
 
 ```
 insure/
-├── app.py                # Main Streamlit app
-├── prompts.py            # System prompts for GPT-4o-mini
-├── state_minimums.json   # Auto insurance minimums for all 50 states + DC
-├── eval.py               # Evaluation script
-├── test_cases.json       # 8 synthetic test cases with ground-truth answers
-├── eval_results.json     # Evaluation output
+├── app.py                     # Main Streamlit app
+├── prompts.py                 # System prompts for GPT-4o-mini
+├── acord25_template.pdf.pdf   # Official fillable ACORD 25 form (2016/03)
+├── state_minimums.json        # Auto and home insurance minimums by state
+├── eval.py                    # Evaluation script
+├── test_cases.json            # 8 synthetic test cases with ground-truth answers
+├── eval_results.json          # Evaluation output
 ├── requirements.txt
-└── .env                  # Your API key (not committed)
+└── .env                       # Your API key (not committed)
 ```
 
 ## Requirements
 
 - Python 3.9+
 - OpenAI API key (GPT-4o-mini)
+- `pypdf>=4.0.0` (for reading uploaded PDFs and filling the ACORD 25 template)
 
 ---
 
