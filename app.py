@@ -16,7 +16,7 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 st.set_page_config(
-    page_title="inSURE",
+    page_title="InSure",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="collapsed",
