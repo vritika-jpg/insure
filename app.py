@@ -91,35 +91,7 @@ st.markdown(
     letter-spacing: 1.5px; color: #9ca3af; margin: 18px 0 7px;
 }
 
-/* ── ACORD 25 ── */
-.acord-wrapper {
-    font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #111;
-    border: 1.5px solid #000; max-width: 900px; margin: 0 auto; background: white;
-}
-.acord-header {
-    background: #1a3668; color: white; text-align: center;
-    padding: 8px 4px; font-size: 13px; font-weight: bold; letter-spacing: 2px;
-}
-.acord-section-bg {
-    background: #d0dcec; font-size: 7.5px; font-weight: bold;
-    text-transform: uppercase; letter-spacing: .8px;
-    padding: 3px 7px; border-bottom: 1px solid #bbb; border-top: 1px solid #bbb;
-}
-table.at { width: 100%; border-collapse: collapse; }
-table.at td, table.at th {
-    border: .75px solid #999; padding: 4px 6px; vertical-align: top; font-size: 10px;
-}
-.al  { font-size: 6.5px; color: #555; font-weight: bold; text-transform: uppercase;
-        letter-spacing: .4px; display: block; }
-.av  { font-size: 10px; font-weight: 600; color: #111; display: block; margin-top: 2px; }
-.abp { font-size: 7.5px; color: #333; line-height: 1.4; margin: 0; }
-.act { font-weight: 700; font-size: 9px; text-transform: uppercase; color: #111; }
-.all { font-size: 7px; color: #555; text-transform: uppercase; }
-.alv { font-size: 9px; font-weight: 700; color: #111; }
-.acord-footer {
-    background: #efefef; padding: 4px 8px; font-size: 6.5px;
-    color: #666; text-align: center; border-top: 1px solid #bbb;
-}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -327,156 +299,6 @@ def extract_coi_data(pdf_text: str) -> dict:
     return json.loads(resp.choices[0].message.content)
 
 
-def _f(val, fallback: str = "—") -> str:
-    """Format a value for HTML display: escape and return fallback if absent."""
-    if val and str(val).strip() not in ("", "null", "None"):
-        return html.escape(str(val))
-    return fallback
-
-
-def render_acord25_html(d: dict) -> str:
-    date_str = _f(d.get("policy_period_start"), datetime.now().strftime("%m/%d/%Y"))
-
-    # Build coverage rows
-    cov_rows = ""
-    for cov in d.get("coverages") or []:
-        ctype = _f(cov.get("type"), "Other")
-        limit_lines = []
-        for key, label in [
-            ("combined_single_limit", "Combined Single Limit"),
-            ("each_occurrence", "Each Occurrence"),
-            ("aggregate", "Aggregate"),
-            ("bodily_injury_per_person", "Bodily Injury / Person"),
-            ("bodily_injury_per_accident", "Bodily Injury / Accident"),
-            ("property_damage", "Property Damage"),
-            ("deductible", "Deductible"),
-        ]:
-            if cov.get(key) and str(cov[key]).strip() not in ("", "null", "None"):
-                limit_lines.append(
-                    f'<span class="all">{html.escape(label)}:</span> '
-                    f'<span class="alv">{html.escape(str(cov[key]))}</span>'
-                )
-        limits_html = "&nbsp; &nbsp;".join(limit_lines) if limit_lines else "—"
-        cov_rows += (
-            f"<tr><td colspan='6' style='background:#f7f9fc'>"
-            f"<span class='act'>{ctype}</span></td></tr>"
-            f"<tr><td colspan='6' style='padding:3px 6px;font-size:9px'>{limits_html}</td></tr>"
-        )
-
-    if not cov_rows:
-        cov_rows = "<tr><td colspan='6' style='color:#9ca3af;font-style:italic;padding:8px'>No coverages extracted</td></tr>"
-
-    boilerplate = (
-        "THIS CERTIFICATE IS ISSUED AS A MATTER OF INFORMATION ONLY AND CONFERS NO RIGHTS UPON "
-        "THE CERTIFICATE HOLDER. THIS CERTIFICATE DOES NOT AFFIRMATIVELY OR NEGATIVELY AMEND, "
-        "EXTEND OR ALTER THE COVERAGE AFFORDED BY THE POLICIES BELOW."
-    )
-
-    return f"""
-<div class="acord-wrapper">
-  <div class="acord-header">CERTIFICATE OF LIABILITY INSURANCE</div>
-
-  <table class="at">
-    <tr>
-      <td width="70%"><span class="al">This certificate is issued as a matter of information only</span></td>
-      <td width="30%">
-        <span class="al">Date (MM/DD/YYYY)</span>
-        <span class="av">{date_str}</span>
-      </td>
-    </tr>
-  </table>
-
-  <table class="at">
-    <tr>
-      <td width="38%">
-        <span class="al">Producer</span>
-        <span class="av">{_f(d.get('producer_name'))}</span>
-        <span class="av" style="font-weight:400;font-size:9px">{_f(d.get('producer_address'), '')}</span>
-      </td>
-      <td width="62%">
-        <p class="abp">{boilerplate}</p>
-      </td>
-    </tr>
-  </table>
-
-  <table class="at">
-    <tr>
-      <td width="12%" style="background:#d0dcec">
-        <span class="al" style="font-size:7px;writing-mode:horizontal-tb">Insured</span>
-      </td>
-      <td width="54%">
-        <span class="av" style="font-size:11px">{_f(d.get('insured_name'))}</span>
-        <span class="av" style="font-weight:400;font-size:9px">{_f(d.get('insured_address'), '')}</span>
-      </td>
-      <td width="34%">
-        <span class="al">Additional Insured</span>
-        <span class="av" style="font-weight:400">{_f(d.get('additional_insured'))}</span>
-      </td>
-    </tr>
-  </table>
-
-  <div class="acord-section-bg">Insurer(s) Affording Coverage</div>
-  <table class="at">
-    <tr>
-      <td width="12%" style="background:#d0dcec"><span class="al">Insurer A</span></td>
-      <td width="54%"><span class="av">{_f(d.get('insurer_name'))}</span></td>
-      <td width="34%">
-        <span class="al">Policy Number</span>
-        <span class="av">{_f(d.get('policy_number'))}</span>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <span class="al">Policy Period</span>
-        <span class="av">{_f(d.get('policy_period_start'))} &nbsp;–&nbsp; {_f(d.get('policy_period_end'))}</span>
-      </td>
-      <td><span class="al">Insurers B – F</span><span class="av" style="color:#9ca3af;font-weight:400">—</span></td>
-    </tr>
-  </table>
-
-  <div class="acord-section-bg">Coverages — Certificate Number / Revision Number</div>
-  <table class="at">
-    <thead>
-      <tr style="background:#eef2f7">
-        <th colspan="4" style="font-size:7.5px;text-align:left;padding:3px 6px">Type of Insurance</th>
-        <th colspan="2" style="font-size:7.5px;text-align:left;padding:3px 6px">Limits</th>
-      </tr>
-    </thead>
-    <tbody>{cov_rows}</tbody>
-  </table>
-
-  <div class="acord-section-bg">Description of Operations / Locations / Vehicles</div>
-  <table class="at">
-    <tr><td style="min-height:44px;font-size:9.5px">{_f(d.get('description_of_operations'), 'N/A')}</td></tr>
-  </table>
-
-  <div class="acord-section-bg">Certificate Holder</div>
-  <table class="at">
-    <tr>
-      <td width="45%" style="padding:7px 8px">
-        <span class="av" style="font-size:11px">{_f(d.get('certificate_holder_name'))}</span>
-        <span class="av" style="font-weight:400;font-size:9px">{_f(d.get('certificate_holder_address'), '')}</span>
-      </td>
-      <td width="55%" style="padding:7px 8px">
-        <span class="al">Cancellation</span>
-        <p class="abp" style="margin-top:4px">
-          SHOULD ANY OF THE ABOVE DESCRIBED POLICIES BE CANCELLED BEFORE THE EXPIRATION DATE THEREOF,
-          NOTICE WILL BE DELIVERED IN ACCORDANCE WITH THE POLICY PROVISIONS.
-        </p>
-        <div style="margin-top:14px;font-size:9px">
-          AUTHORIZED REPRESENTATIVE
-          <span style="border-bottom:1px solid #000;display:inline-block;width:170px;margin-left:6px">&nbsp;</span>
-        </div>
-      </td>
-    </tr>
-  </table>
-
-  <div class="acord-footer">
-    ACORD 25 (2016/03) &nbsp;|&nbsp; © 1988–2016 ACORD CORPORATION. All rights reserved.
-    &nbsp;|&nbsp; Generated by inSURE — for informational purposes only.
-  </div>
-</div>
-"""
 
 
 def _fix_field_text_color(writer: pypdf.PdfWriter) -> None:
@@ -519,19 +341,39 @@ def fill_acord25_pdf(d: dict) -> bytes:
     def cb(key: str) -> None:
         fields[key] = _CB_ON
 
+    # ── Header ────────────────────────────────────────────────────────────────
     s("F[0].P1[0].Form_CompletionDate_A[0]", datetime.now().strftime("%m/%d/%Y"))
 
+    # ── Producer ──────────────────────────────────────────────────────────────
     s("F[0].P1[0].Producer_FullName_A[0]", d.get("producer_name"))
     s("F[0].P1[0].Producer_MailingAddress_LineOne_A[0]", d.get("producer_address"))
+    s("F[0].P1[0].Producer_MailingAddress_CityName_A[0]", d.get("producer_city"))
+    s("F[0].P1[0].Producer_MailingAddress_StateOrProvinceCode_A[0]", d.get("producer_state"))
+    s("F[0].P1[0].Producer_MailingAddress_PostalCode_A[0]", d.get("producer_zip"))
+    s("F[0].P1[0].Producer_ContactPerson_FullName_A[0]", d.get("producer_contact"))
+    s("F[0].P1[0].Producer_ContactPerson_PhoneNumber_A[0]", d.get("producer_phone"))
+    s("F[0].P1[0].Producer_ContactPerson_EmailAddress_A[0]", d.get("producer_email"))
+    s("F[0].P1[0].Producer_FaxNumber_A[0]", d.get("producer_fax"))
 
+    # ── Named Insured ─────────────────────────────────────────────────────────
     s("F[0].P1[0].NamedInsured_FullName_A[0]", d.get("insured_name"))
     s("F[0].P1[0].NamedInsured_MailingAddress_LineOne_A[0]", d.get("insured_address"))
+    s("F[0].P1[0].NamedInsured_MailingAddress_CityName_A[0]", d.get("insured_city"))
+    s("F[0].P1[0].NamedInsured_MailingAddress_StateOrProvinceCode_A[0]", d.get("insured_state"))
+    s("F[0].P1[0].NamedInsured_MailingAddress_PostalCode_A[0]", d.get("insured_zip"))
 
+    # ── Insurer ───────────────────────────────────────────────────────────────
     s("F[0].P1[0].Insurer_FullName_A[0]", d.get("insurer_name"))
+    s("F[0].P1[0].Insurer_NAICCode_A[0]", d.get("insurer_naic"))
 
+    # ── Certificate Holder ────────────────────────────────────────────────────
     s("F[0].P1[0].CertificateHolder_FullName_A[0]", d.get("certificate_holder_name"))
     s("F[0].P1[0].CertificateHolder_MailingAddress_LineOne_A[0]", d.get("certificate_holder_address"))
+    s("F[0].P1[0].CertificateHolder_MailingAddress_CityName_A[0]", d.get("certificate_holder_city"))
+    s("F[0].P1[0].CertificateHolder_MailingAddress_StateOrProvinceCode_A[0]", d.get("certificate_holder_state"))
+    s("F[0].P1[0].CertificateHolder_MailingAddress_PostalCode_A[0]", d.get("certificate_holder_zip"))
 
+    # ── Description of Operations ─────────────────────────────────────────────
     s("F[0].P1[0].CertificateOfLiabilityInsurance_ACORDForm_RemarkText_A[0]", d.get("description_of_operations"))
 
     policy_num = d.get("policy_number") or ""
@@ -539,6 +381,7 @@ def fill_acord25_pdf(d: dict) -> bytes:
     exp = d.get("policy_period_end") or ""
     add_ins = "Y" if d.get("additional_insured") else ""
 
+    # ── Coverages ─────────────────────────────────────────────────────────────
     for cov in (d.get("coverages") or []):
         ctype = (cov.get("type") or "").lower()
 
@@ -552,6 +395,10 @@ def fill_acord25_pdf(d: dict) -> bytes:
             s("F[0].P1[0].GeneralLiability_EachOccurrence_LimitAmount_A[0]", cov.get("each_occurrence"))
             s("F[0].P1[0].GeneralLiability_GeneralAggregate_LimitAmount_A[0]", cov.get("aggregate"))
             s("F[0].P1[0].GeneralLiability_ProductsAndCompletedOperations_AggregateLimitAmount_A[0]", cov.get("aggregate"))
+            s("F[0].P1[0].GeneralLiability_PersonalAndAdvertisingInjury_LimitAmount_A[0]",
+              cov.get("personal_advertising_injury") or cov.get("each_occurrence"))
+            s("F[0].P1[0].GeneralLiability_MedicalExpense_EachPersonLimitAmount_A[0]", cov.get("medical_expense"))
+            s("F[0].P1[0].GeneralLiability_FireDamageRentedPremises_EachOccurrenceLimitAmount_A[0]", cov.get("fire_damage"))
             if add_ins:
                 s("F[0].P1[0].CertificateOfInsurance_GeneralLiability_AdditionalInsuredCode_A[0]", add_ins)
 
@@ -580,14 +427,17 @@ def fill_acord25_pdf(d: dict) -> bytes:
             if add_ins:
                 s("F[0].P1[0].CertificateOfInsurance_ExcessLiability_AdditionalInsuredCode_A[0]", add_ins)
 
-        elif any(k in ctype for k in ["workers comp", "workers' comp", "workers compensation", " wc "]):
+        elif any(k in ctype for k in ["workers comp", "workers' comp", "workers compensation", "wc"]):
             cb("F[0].P1[0].WorkersCompensationEmployersLiability_WorkersCompensationStatutoryLimitIndicator_A[0]")
             s("F[0].P1[0].Policy_WorkersCompensationAndEmployersLiability_PolicyNumberIdentifier_A[0]", policy_num)
             s("F[0].P1[0].Policy_WorkersCompensationAndEmployersLiability_EffectiveDate_A[0]", eff)
             s("F[0].P1[0].Policy_WorkersCompensationAndEmployersLiability_ExpirationDate_A[0]", exp)
-            s("F[0].P1[0].WorkersCompensationEmployersLiability_EmployersLiability_EachAccidentLimitAmount_A[0]", cov.get("each_occurrence"))
-            s("F[0].P1[0].WorkersCompensationEmployersLiability_EmployersLiability_DiseaseEachEmployeeLimitAmount_A[0]", cov.get("each_occurrence"))
-            s("F[0].P1[0].WorkersCompensationEmployersLiability_EmployersLiability_DiseasePolicyLimitAmount_A[0]", cov.get("aggregate"))
+            s("F[0].P1[0].WorkersCompensationEmployersLiability_EmployersLiability_EachAccidentLimitAmount_A[0]",
+              cov.get("each_occurrence"))
+            s("F[0].P1[0].WorkersCompensationEmployersLiability_EmployersLiability_DiseaseEachEmployeeLimitAmount_A[0]",
+              cov.get("each_occurrence"))
+            s("F[0].P1[0].WorkersCompensationEmployersLiability_EmployersLiability_DiseasePolicyLimitAmount_A[0]",
+              cov.get("aggregate"))
 
         else:
             s("F[0].P1[0].OtherPolicy_OtherPolicyDescription_A[0]", cov.get("type"))
@@ -706,7 +556,27 @@ with tab2:
                 use_container_width=True,
             )
 
-        st.markdown(render_acord25_html(d), unsafe_allow_html=True)
+        col_a, col_b = st.columns(2)
+        with col_a:
+            if d.get("insured_name"):
+                st.markdown(f"**Insured:** {d['insured_name']}")
+            if d.get("insurer_name"):
+                st.markdown(f"**Insurer:** {d['insurer_name']}")
+            if d.get("policy_number"):
+                st.markdown(f"**Policy #:** {d['policy_number']}")
+            period = " – ".join(filter(None, [d.get("policy_period_start"), d.get("policy_period_end")]))
+            if period:
+                st.markdown(f"**Period:** {period}")
+        with col_b:
+            if d.get("producer_name"):
+                st.markdown(f"**Producer:** {d['producer_name']}")
+            if d.get("certificate_holder_name"):
+                st.markdown(f"**Certificate Holder:** {d['certificate_holder_name']}")
+            if d.get("additional_insured"):
+                st.markdown(f"**Additional Insured:** {d['additional_insured']}")
+            cov_types = [c.get("type", "") for c in (d.get("coverages") or []) if c.get("type")]
+            if cov_types:
+                st.markdown(f"**Coverages:** {', '.join(cov_types)}")
 
         with st.expander("Extracted Fields (raw JSON)"):
             st.json(d)

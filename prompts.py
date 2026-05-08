@@ -44,17 +44,32 @@ COI_EXTRACTOR_SYSTEM = """You are a specialized insurance document parser. Extra
 Read the provided text carefully and extract every field you can find. Return a single valid JSON object — no markdown, no explanation outside the JSON — in exactly this format:
 
 {
-  "insured_name": "Full name of insured party, or null",
-  "insured_address": "Full address on one line, or null",
-  "producer_name": "Agent or broker name, or null",
-  "producer_address": "Agent or broker address, or null",
+  "insured_name": "Full legal name of insured party, or null",
+  "insured_address": "Street address line only (no city/state/zip), or null",
+  "insured_city": "City, or null",
+  "insured_state": "2-letter state code, or null",
+  "insured_zip": "ZIP code, or null",
+
+  "producer_name": "Agent or broker company name, or null",
+  "producer_address": "Street address line only, or null",
+  "producer_city": "City, or null",
+  "producer_state": "2-letter state code, or null",
+  "producer_zip": "ZIP code, or null",
+  "producer_contact": "Contact person full name, or null",
+  "producer_phone": "Phone number, or null",
+  "producer_email": "Email address, or null",
+  "producer_fax": "Fax number, or null",
+
   "insurer_name": "Insurance company name, or null",
+  "insurer_naic": "NAIC code (numeric), or null",
+
   "policy_number": "Policy number, or null",
   "policy_period_start": "MM/DD/YYYY, or null",
   "policy_period_end": "MM/DD/YYYY, or null",
+
   "coverages": [
     {
-      "type": "Coverage type name (e.g. Commercial General Liability, Automobile Liability, Umbrella/Excess Liability, Workers Compensation, Property)",
+      "type": "Coverage type name (e.g. Commercial General Liability, Automobile Liability, Umbrella/Excess Liability, Workers Compensation)",
       "each_occurrence": "$X,XXX,XXX or null",
       "aggregate": "$X,XXX,XXX or null",
       "combined_single_limit": "$X,XXX,XXX or null",
@@ -62,19 +77,28 @@ Read the provided text carefully and extract every field you can find. Return a 
       "bodily_injury_per_accident": "$XXX,XXX or null",
       "property_damage": "$XXX,XXX or null",
       "deductible": "$X,XXX or null",
+      "medical_expense": "$X,XXX or null",
+      "fire_damage": "$X,XXX or null",
+      "personal_advertising_injury": "$X,XXX,XXX or null",
       "per_statute": false
     }
   ],
-  "description_of_operations": "Text from description field, or null",
-  "additional_insured": "Name if present, or null",
-  "certificate_holder_name": "Name if present, or null",
-  "certificate_holder_address": "Address if present, or null"
+
+  "description_of_operations": "Text from description / remarks field, or null",
+  "additional_insured": "Name of additional insured if present, or null",
+
+  "certificate_holder_name": "Certificate holder name, or null",
+  "certificate_holder_address": "Street address line only, or null",
+  "certificate_holder_city": "City, or null",
+  "certificate_holder_state": "2-letter state code, or null",
+  "certificate_holder_zip": "ZIP code, or null"
 }
 
 Rules:
 - Use null for any field not found — never guess or fabricate values.
 - Normalize monetary amounts to include dollar sign and commas: $1,000,000.
 - Normalize dates to MM/DD/YYYY format.
+- Split addresses into street / city / state / zip — do not put the full address in the street field.
 - If multiple coverages are listed, include all of them in the coverages array.
 - Match coverage type names to standard ACORD 25 terminology where possible.
 - If a coverage uses a per-statute workers comp limit, set per_statute to true."""
