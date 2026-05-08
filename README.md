@@ -42,6 +42,7 @@ Extracted fields: insured name & address, producer, insurer, policy number, poli
 - **Tool use for state data.** State minimums are structured data retrieved on demand via a function call (`check_state_minimums`), not pre-loaded into every prompt.
 - **Structured outputs.** The system prompt constrains the model to return a defined JSON schema, enabling consistent UI rendering and programmatic evaluation.
 - **Scope-limited to personal lines.** The system explicitly refuses commercial lines requests and flags them for a licensed agent.
+- **Official ACORD 25 form filling.** The COI generator fills the real ACORD 25 (2016/03) fillable PDF using `pypdf`, mapping extracted JSON fields directly to the form's named fields. No custom PDF layout code — the form structure is already correct by definition.
 
 ---
 
