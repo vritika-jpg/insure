@@ -1,5 +1,5 @@
 """
-eval.py — inSURE Evaluation Script
+eval.py — InSure Evaluation Script
 Runs 8 test cases through:
   1. Full system (tool use + state minimums + structured output)
   2. Baseline (prompt-only, no tool, no state data)
@@ -183,7 +183,7 @@ Score this response."""
 def main():
     results = []
     print(f"\n{'='*70}")
-    print(f"inSURE Evaluation — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    print(f"InSure Evaluation — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print(f"{'='*70}\n")
 
     for tc in TEST_CASES:

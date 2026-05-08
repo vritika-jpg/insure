@@ -462,8 +462,7 @@ def fill_acord25_pdf(d: dict) -> bytes:
 
 # ── Layout ───────────────────────────────────────────────────────────────────
 st.markdown(
-    '<div class="app-header"><h1>inSURE</h1>'
-    "<p>AI-powered insurance coverage analysis &amp; certificate generation</p></div>",
+    '<div class="app-header"><h1>InSure</h1></div>',
     unsafe_allow_html=True,
 )
 
