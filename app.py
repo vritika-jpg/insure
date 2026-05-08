@@ -93,7 +93,7 @@ st.markdown(
 
 /* ── ACORD 25 ── */
 .acord-wrapper {
-    font-family: Arial, Helvetica, sans-serif; font-size: 10px;
+    font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #111;
     border: 1.5px solid #000; max-width: 900px; margin: 0 auto; background: white;
 }
 .acord-header {
@@ -113,9 +113,9 @@ table.at td, table.at th {
         letter-spacing: .4px; display: block; }
 .av  { font-size: 10px; font-weight: 600; color: #111; display: block; margin-top: 2px; }
 .abp { font-size: 7.5px; color: #333; line-height: 1.4; margin: 0; }
-.act { font-weight: 700; font-size: 9px; text-transform: uppercase; }
+.act { font-weight: 700; font-size: 9px; text-transform: uppercase; color: #111; }
 .all { font-size: 7px; color: #555; text-transform: uppercase; }
-.alv { font-size: 9px; font-weight: 700; }
+.alv { font-size: 9px; font-weight: 700; color: #111; }
 .acord-footer {
     background: #efefef; padding: 4px 8px; font-size: 6.5px;
     color: #666; text-align: center; border-top: 1px solid #bbb;
@@ -479,6 +479,31 @@ def render_acord25_html(d: dict) -> str:
 """
 
 
+def _fix_field_text_color(writer: pypdf.PdfWriter) -> None:
+    """Walk all AcroForm fields and force black text in Default Appearance."""
+    root = writer._root_object
+    if "/AcroForm" not in root:
+        return
+    acroform = root["/AcroForm"].get_object()
+
+    def _process(ref):
+        obj = ref.get_object() if hasattr(ref, "get_object") else ref
+        da = str(obj.get("/DA", ""))
+        # Replace white (1 g / 1 1 1 rg) with black, or inject a safe default
+        new_da = da.replace("1 1 1 rg", "0 0 0 rg").replace("1 g", "0 g")
+        if not new_da.strip():
+            new_da = "/Helv 10 Tf 0 g"
+        if new_da != da:
+            obj[pypdf.generic.NameObject("/DA")] = pypdf.generic.create_string_object(new_da)
+        if "/Kids" in obj:
+            for kid in obj["/Kids"]:
+                _process(kid)
+
+    if "/Fields" in acroform:
+        for field_ref in acroform["/Fields"]:
+            _process(field_ref)
+
+
 def fill_acord25_pdf(d: dict) -> bytes:
     reader = pypdf.PdfReader(_ACORD25_TEMPLATE)
     writer = pypdf.PdfWriter()
@@ -573,6 +598,13 @@ def fill_acord25_pdf(d: dict) -> bytes:
             s("F[0].P1[0].OtherPolicy_CoverageCode_A[0]", limit)
 
     writer.update_page_form_field_values(writer.pages[0], fields)
+    _fix_field_text_color(writer)
+
+    if "/AcroForm" in writer._root_object:
+        writer._root_object["/AcroForm"].update({
+            pypdf.generic.NameObject("/NeedAppearances"): pypdf.generic.BooleanObject(True)
+        })
+
     buf = io.BytesIO()
     writer.write(buf)
     return buf.getvalue()
