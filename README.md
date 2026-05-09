@@ -82,9 +82,12 @@ and scale, not just accuracy.*
 
 ---
 
-## Artifact Snapshot
+## Artifact Snapshots
 
-*(Add screenshots here — one of the Coverage Explainer output card, one of the COI generator)*
+<img width="893" height="460" alt="image" src="https://github.com/user-attachments/assets/bb07ac4b-4783-4db4-9f68-9c86b32ee5cf" />
+
+<img width="956" height="500" alt="image" src="https://github.com/user-attachments/assets/26d2e0e7-eb6e-44a2-95e0-020f5b596c17" />
+
 
 ---
 
