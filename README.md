@@ -130,7 +130,7 @@ Results saved to `eval_results.json`.
 insure/
 ├── app.py                     # Main Streamlit app
 ├── prompts.py                 # System prompts for GPT-4o-mini
-├── acord25_template.pdf.pdf   # Official fillable ACORD 25 form (2016/03)
+├── acord25_template.pdf   # Official fillable ACORD 25 form (2016/03)
 ├── state_minimums.json        # Auto and home insurance minimums by state
 ├── eval.py                    # Evaluation script
 ├── test_cases.json            # 8 synthetic test cases with ground-truth answers
