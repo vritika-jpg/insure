@@ -70,6 +70,16 @@ Extracted fields: insured name & address, producer, insurer, policy number, poli
 
 **Where a human should stay involved:** Any low-confidence output, commercial lines questions, carrier recommendations, and price quotes are all out of scope and escalated to a licensed agent.
 
+*A note on baseline choice: the most honest baseline would be a licensed agent doing 
+this manually. As someone who works at an independent agency, I could likely match 
+or beat the AI on accuracy for straightforward cases — but that misses the point. 
+The real constraint is time and volume. A COI that takes an agent 10-15 minutes to 
+produce manually takes InSure seconds. A coverage consultation that occupies 20 
+minutes of agent time happens instantly, at any hour, without a calendar invite. 
+The prompt-only baseline isolates the specific value of the tool use and structured 
+output design over a generic LLM response — but the fuller business case is speed 
+and scale, not just accuracy.*
+
 ---
 
 ## Artifact Snapshot
