@@ -136,7 +136,6 @@ insure/
 ├── test_cases.json            # 8 synthetic test cases with ground-truth answers
 ├── eval_results.json          # Evaluation output
 ├── requirements.txt
-└── .env                       # Your API key (not committed)
 ```
 
 ## Requirements
